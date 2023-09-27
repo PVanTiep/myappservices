@@ -3,4 +3,7 @@
 build
 
 #ignore .idea directory
-.idea
+/.idea
+
+*.iml
+
