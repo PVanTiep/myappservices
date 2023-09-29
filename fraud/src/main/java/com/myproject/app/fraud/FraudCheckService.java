@@ -16,6 +16,7 @@ public class FraudCheckService {
                         .customerId(customerId)
                         .isFraudster(false)
                         .createdAt(LocalDateTime.now())
+                        .status(Status.ACTIVE)
                         .build()
         );
         return false;

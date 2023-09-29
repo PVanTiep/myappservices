@@ -1,21 +1,19 @@
 package com.myproject.app.customer;
 
 
+import com.myproject.app.amqp.RabbitMQMessageProducer;
 import com.myproject.app.clients.fraud.FraudCheckResponse;
 import com.myproject.app.clients.fraud.FraudClient;
-import com.myproject.app.clients.notification.NotificationClient;
 import com.myproject.app.clients.notification.NotificationRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @AllArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
-    private final RestTemplate restTemplate;
     private final FraudClient fraudClient;
-    private final NotificationClient notificationClient;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
     public void registerCustomer(CustomerRegistrationRequest request) {
         Customer customer = Customer.builder()
                 .firstName(request.firstName())
@@ -38,12 +36,16 @@ public class CustomerService {
             throw new IllegalStateException("fraudster");
         }
         // todo: send notification
-        notificationClient.sendNotification(
-                new NotificationRequest(
-                        customer.getId(),
-                        customer.getEmail(),
-                        String.format("Hi %s, welcome to my project", customer.getFirstName())
-                )
+
+        NotificationRequest notificationRequest = new NotificationRequest(
+            customer.getId(),
+            customer.getEmail(),
+            String.format("Hi %s, welcome to my project", customer.getFirstName()));
+
+        rabbitMQMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing.key"
         );
     }
 }

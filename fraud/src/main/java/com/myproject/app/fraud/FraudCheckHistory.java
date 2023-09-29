@@ -21,4 +21,6 @@ public class FraudCheckHistory {
     private Integer customerId;
     private Boolean isFraudster;
     private LocalDateTime createdAt;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 }

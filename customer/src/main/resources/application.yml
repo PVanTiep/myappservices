@@ -18,6 +18,10 @@ spring:
         format_sql: true
   zipkin:
       base-url: http://localhost:9411
+  rabbitmq:
+    addresses: localhost:5672
+    username: guest
+    password: guest
 #  cloud:
 #    compatibility-verifier:
 #      enabled: false
@@ -27,3 +31,9 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+  instance:
+    lease-renewal-interval-in-seconds: 5
+
+logging:
+  level:
+    org.springframework.amqp: debug
