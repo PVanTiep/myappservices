@@ -1,9 +1,0 @@
-
-# Ignore Gradle build output directory
-build
-
-#ignore .idea directory
-/.idea
-
-*.iml
-
